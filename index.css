@@ -3,20 +3,119 @@
 @layer base {
     body {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        @apply bg-slate-950 text-slate-50;
+        @apply bg-[#020617] text-slate-50 overflow-x-hidden;
     }
 }
 
 @layer utilities {
     .glass-card {
-        @apply bg-slate-900/60 backdrop-blur-xl border border-white/10;
+        @apply bg-[#0f172a]/40 backdrop-blur-2xl border border-white/5;
     }
 
-    .neon-glow {
-        box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+    /* Metallic Silver - Cleaner and Brighter */
+    .metal-silver {
+        background: linear-gradient(to bottom,
+                #ffffff 0%,
+                #f8fafc 45%,
+                #cbd5e1 50%,
+                #e2e8f0 55%,
+                #ffffff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(0 4px 10px rgba(255, 255, 255, 0.05));
     }
 
-    .gradient-text {
-        @apply bg-gradient-to-br from-sky-400 to-indigo-400 bg-clip-text text-transparent;
+    /* Metallic Blue - More Vibrant */
+    .metal-blue {
+        background: linear-gradient(to bottom,
+                #7dd3fc 0%,
+                #0ea5e9 45%,
+                #0284c7 50%,
+                #0ea5e9 55%,
+                #7dd3fc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(0 0 20px rgba(14, 165, 233, 0.4));
+    }
+
+    .reveal-on-hover .hidden-content {
+        max-height: 0;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        pointer-events: none;
+    }
+
+    .reveal-on-hover:hover .hidden-content {
+        max-height: 400px;
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .reveal-on-hover:hover {
+        @apply border-sky-500/50 bg-sky-500/5;
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px -15px rgba(14, 165, 233, 0.15);
+    }
+
+    .interactive-card:hover {
+        transform: scale(1.02);
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .animate-float {
+        animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes dash {
+        to {
+            stroke-dashoffset: -200;
+        }
+    }
+
+    .animate-dash {
+        animation: dash 5s linear infinite;
+    }
+
+    @keyframes spin-slow {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .animate-spin-slow {
+        animation: spin-slow 20s linear infinite;
+    }
+
+    @keyframes dash-offset {
+        from {
+            transform: translateX(-100%);
+        }
+
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    .animate-dash-offset {
+        animation: dash-offset 2s ease-out forwards;
     }
 }

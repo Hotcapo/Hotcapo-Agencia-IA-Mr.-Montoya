@@ -10,6 +10,7 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Chatbot from './components/Chatbot';
 import StarBackground from './components/StarBackground';
+import ProcessFlow from './components/ProcessFlow';
 
 const App: React.FC = () => {
   return (
@@ -30,6 +31,7 @@ const App: React.FC = () => {
         <Hero />
         <Stats />
         <Services />
+        <ProcessFlow />
         <Framework />
         <Pricing />
         <Contact />

@@ -5,90 +5,83 @@ const Pricing: React.FC = () => {
   const plans = [
     {
       name: "Básico",
-      setup: "$150 - $350",
-      retainer: "$60 - $150",
+      setup: "$150",
+      retainer: "$60/m",
       features: [
-        "Una sola automatización de flujo",
-        "Integración básica con CRM",
-        "Reporte mensual de ejecución",
-        "Mantenimiento estándar"
+        "Flujo único",
+        "IA Conversacional",
+        "Mantenimiento básico"
       ],
       popular: false
     },
     {
       name: "Avanzado",
-      setup: "$700 - $2,000",
-      retainer: "$150 - $400",
+      setup: "$700",
+      retainer: "$150/m",
       features: [
-        "Múltiples flujos complejos",
-        "Chatbot IA con Base de Conocimientos",
-        "Integración WhatsApp Business",
-        "Monitoreo 24/7 de errores",
-        "Soporte técnico prioritario"
+        "Multifluido",
+        "Base de Conocimiento",
+        "Soporte 24/7"
       ],
       popular: true
     },
     {
-      name: "Full Business",
-      setup: "+$2,800",
-      retainer: "+$800",
+      name: "Elite Business",
+      setup: "+$2.8k",
+      retainer: "+$800/m",
       features: [
-        "Automatización total del negocio",
-        "Agentes autónomos de toma de decisión",
-        "Optimización de operaciones internas",
-        "Dashboards de BI en tiempo real",
-        "Consultoría estratégica semanal"
+        "Automatización Total",
+        "Decision Making AI",
+        "Consultoría VIP"
       ],
       popular: false
     }
   ];
 
   return (
-    <section id="precios" className="py-24 px-6 bg-slate-900/20">
+    <section id="precios" className="py-24 px-6 relative">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="text-4xl font-extrabold text-white">Estructura de Inversión 2026</h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">
-            Modelos híbridos diseñados para escalar junto a tu negocio, garantizando flujo de caja y soporte continuo.
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-6xl font-black metallic-text tracking-tight uppercase mb-4">Inversión</h2>
+          <p className="text-slate-400 text-sm max-w-xl mx-auto italic">
+            Modelos de inversión transparentes para escalar tu negocio con IA.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6">
           {plans.map((plan, idx) => (
-            <div 
-              key={idx} 
-              className={`relative glass-card p-10 rounded-3xl border-white/5 flex flex-col ${plan.popular ? 'border-sky-500/50 scale-105 z-10 shadow-2xl shadow-sky-500/10' : ''}`}
+            <div
+              key={idx}
+              className={`reveal-on-hover glass-card p-10 rounded-3xl border-white/5 flex flex-col items-center text-center transition-all duration-500 ${plan.popular ? 'border-sky-500/30 bg-sky-500/5' : ''}`}
             >
-              {plan.popular && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-sky-500 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full">
-                  Más Recomendado
-                </div>
-              )}
-              
+              <h3 className="text-sm font-black text-sky-400 mb-6 uppercase tracking-widest">{plan.name}</h3>
+
               <div className="mb-8">
-                <h3 className="text-2xl font-bold text-white mb-4">{plan.name}</h3>
-                <div className="space-y-1">
-                  <div className="text-3xl font-extrabold text-white">{plan.setup}</div>
-                  <div className="text-xs text-sky-400 font-bold uppercase tracking-wider">Setup Initial Fee</div>
-                </div>
-                <div className="mt-4 pt-4 border-t border-white/10">
-                  <div className="text-xl font-bold text-slate-300">{plan.retainer}<span className="text-xs font-normal text-slate-500">/mes</span></div>
-                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Monthly Retainer</div>
-                </div>
+                <div className="text-5xl font-black text-white tracking-tighter mb-1">{plan.setup}</div>
+                <div className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">Pago Inicial (Setup)</div>
               </div>
 
-              <ul className="space-y-4 mb-10 flex-grow">
-                {plan.features.map((feature, fIdx) => (
-                  <li key={fIdx} className="flex gap-3 text-sm text-slate-400 items-start">
-                    <i className="fa-solid fa-circle-check text-sky-500 mt-1"></i>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+              <div className="hidden-content w-full">
+                <div className="h-px bg-white/5 w-full mb-6"></div>
+                <div className="text-3xl font-black text-white mb-1">{plan.retainer}</div>
+                <div className="text-[10px] text-slate-500 font-bold tracking-widest uppercase mb-6">Mantenimiento Mensual</div>
 
-              <button className={`w-full py-4 rounded-xl font-bold transition-all ${plan.popular ? 'bg-sky-500 hover:bg-sky-400 text-white shadow-lg shadow-sky-500/20' : 'bg-white/5 hover:bg-white/10 text-white'}`}>
-                Elegir Plan {plan.name}
-              </button>
+                <ul className="space-y-2 mb-8 text-xs text-slate-400">
+                  {plan.features.map((f, i) => (
+                    <li key={i} className="flex items-center justify-center gap-2">
+                      <i className="fa-solid fa-check text-[8px] text-sky-500"></i>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+
+                <button className={`w-full py-4 rounded-xl font-bold text-sm transition-all ${plan.popular ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/20' : 'bg-white/5 text-white hover:bg-white/10'}`}>
+                  SELECCIONAR PLAN
+                </button>
+              </div>
+
+              {!plan.popular && <div className="text-[10px] text-slate-600 font-bold uppercase tracking-widest group-hover:opacity-0 transition-opacity">Expandir Detalles</div>}
+              {plan.popular && <div className="text-[10px] text-sky-400 font-bold uppercase tracking-widest group-hover:opacity-0 transition-opacity">Plan Sugerido</div>}
             </div>
           ))}
         </div>
