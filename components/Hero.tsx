@@ -35,15 +35,17 @@ const Hero: React.FC = () => {
             Agencia de Inteligencia Artificial
           </div>
 
-          <h1 className="text-[3.5rem] md:text-[5.5rem] font-black leading-[0.95] tracking-tighter uppercase whitespace-pre-line">
-            <span className="metal-silver block">Menos</span>
-            <span className="metal-silver block">Procesos.</span>
-            <span className="metal-blue block mt-4">Más</span>
-            <span className="metal-blue block">Resultados.</span>
+          <h1 className="text-[3rem] md:text-[4.5rem] font-black leading-[0.95] tracking-tighter uppercase whitespace-pre-line">
+            <span className="block">
+              <span className="metal-silver">LA </span>
+              <span className="metal-blue">IA</span>
+              <span className="metal-silver"> TRABAJA</span>
+            </span>
+            <span className="metal-blue block mt-2">TÚ GANAS</span>
           </h1>
 
           <p className="text-xl md:text-2xl text-slate-500 font-medium max-w-lg">
-            IA que trabaja. <span className="text-slate-400">Tú escalas.</span>
+            No más procesos, no más empleados, no más 12 horas al día.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 pt-10">
@@ -56,18 +58,9 @@ const Hero: React.FC = () => {
           </div>
         </div>
 
-        {/* AI Ecosystem Hub (Omnicanalidad Visual) */}
-        <div className="relative hidden lg:flex items-center justify-center">
+        {/* AI Ecosystem Hub (Realistic Neon Globe + IA Brain) */}
+        <div className="relative hidden lg:flex items-center justify-center scale-110">
           <div className="relative w-[500px] h-[500px] flex items-center justify-center">
-
-            {/* Central Hub (The Brain) */}
-            <div className="relative w-48 h-48 z-20">
-              <div className="absolute inset-0 bg-sky-500/20 rounded-full animate-pulse blur-3xl"></div>
-              <div className="relative w-full h-full bg-[#020617] border border-sky-500/30 rounded-full flex items-center justify-center text-6xl text-sky-400 shadow-[0_0_100px_rgba(14,165,233,0.2)] overflow-hidden">
-                <i className="fa-solid fa-brain relative z-10 animate-float"></i>
-                <div className="absolute inset-0 bg-gradient-to-t from-sky-500/10 to-transparent"></div>
-              </div>
-            </div>
 
             {/* Connecting Lines (SVG) */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 100 100">
@@ -90,6 +83,40 @@ const Hero: React.FC = () => {
               <path d="M50 50 L70 10" stroke="url(#lineGrad)" strokeWidth="0.15" className="animate-dash" strokeDasharray="100" />
               <path d="M50 50 L15 55" stroke="url(#lineGrad)" strokeWidth="0.15" className="animate-dash" strokeDasharray="100" />
             </svg>
+
+            {/* STEP 1: JUST the rotating world globe */}
+            <div className="relative w-64 h-64 z-20 flex items-center justify-center">
+
+              {/* The Globe Sphere */}
+              <div className="absolute inset-0 rounded-full overflow-hidden">
+                {/* Scrolling world map texture */}
+                <div
+                  className="absolute inset-0 animate-scroll-globe"
+                  style={{
+                    backgroundImage: 'url(/assets/world-map.svg)',
+                    backgroundSize: '500px 100%',
+                    backgroundRepeat: 'repeat-x',
+                  }}
+                />
+                {/* Spherical shading - darkens edges for 3D depth */}
+                <div
+                  className="absolute inset-0 rounded-full pointer-events-none"
+                  style={{
+                    background: 'radial-gradient(circle at 35% 35%, transparent 20%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.7) 65%, rgba(0,0,0,0.95) 80%)'
+                  }}
+                />
+                {/* Subtle light reflection top-left */}
+                <div
+                  className="absolute inset-0 rounded-full pointer-events-none"
+                  style={{
+                    background: 'radial-gradient(circle at 30% 25%, rgba(34,211,238,0.08) 0%, transparent 40%)'
+                  }}
+                />
+              </div>
+              {/* Outer glow ring */}
+              <div className="absolute inset-[-4px] rounded-full border border-sky-400/20 pointer-events-none"></div>
+              <div className="absolute inset-[-1px] rounded-full shadow-[0_0_30px_rgba(14,165,233,0.15)] pointer-events-none"></div>
+            </div>
 
             {/* Platform Nodes */}
             {platforms.map((p: any, i) => (
@@ -114,7 +141,7 @@ const Hero: React.FC = () => {
             ))}
 
             {/* Floating Particles */}
-            {[...Array(8)].map((_, i) => (
+            {[...Array(12)].map((_, i) => (
               <div
                 key={i}
                 className="absolute w-1 h-1 bg-sky-400 rounded-full blur-[1px] animate-pulse"

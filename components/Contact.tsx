@@ -15,15 +15,7 @@ const Contact: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#020617]/50 to-[#020617]"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-[#020617] lg:from-transparent to-transparent"></div>
 
-          <div className="absolute bottom-10 left-10 z-10 hidden lg:block">
-            <div className="glass-card p-6 rounded-2xl backdrop-blur-md border-white/10">
-              <div className="flex items-center gap-4 mb-2">
-                <i className="fa-solid fa-location-dot text-sky-400"></i>
-                <span className="text-sm font-bold text-white uppercase tracking-widest">Presencia Global</span>
-              </div>
-              <p className="text-xs text-slate-400">Escalando empresas en <br /> Latam y España con IA.</p>
-            </div>
-          </div>
+
         </div>
 
         {/* Right Side: Content */}
