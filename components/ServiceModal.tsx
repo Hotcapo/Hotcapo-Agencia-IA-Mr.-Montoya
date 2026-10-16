@@ -8,13 +8,11 @@ interface ServiceModalProps {
         desc: string;
         icon: string;
         color: string;
-        type: 'chatbot' | 'crm' | 'leads' | 'operations';
+        type: 'chatbot' | 'crm' | 'web' | 'operations';
     } | null;
 }
 
 const ServiceModal: React.FC<ServiceModalProps> = ({ isOpen, onClose, service }) => {
-    if (!isOpen || !service) return null;
-
     // -- CHATBOT STATE --
     const [chatStep, setChatStep] = useState(0);
     const [isTyping, setIsTyping] = useState(false);
@@ -23,9 +21,9 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ isOpen, onClose, service })
     const [crmStep, setCrmStep] = useState(0); // 0: Idle, 1: Dragging, 2: Dropped
     const [crmExample, setCrmExample] = useState(0); // 0: Pipeline, 1: Follow-up, 2: Reactivation
 
-    // -- LEADS STATE --
-    const [enrichmentStep, setEnrichmentStep] = useState(0);
-    const [leadsExample, setLeadsExample] = useState(0); // 0: Enrichment, 1: Scraping, 2: Filtering
+    // -- WEB STATE --
+    const [webStep, setWebStep] = useState(0);
+    const [webExample, setWebExample] = useState(0); // 0: Diseño, 1: Desarrollo, 2: Despliegue
 
     // -- OPS STATE --
     const [opsStep, setOpsStep] = useState(0);
@@ -87,17 +85,17 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ isOpen, onClose, service })
         return colors[color] || colors.default;
     };
 
-    const colorClasses = getColorClasses(service.color);
+    const colorClasses = getColorClasses(service?.color || 'sky');
 
     useEffect(() => {
-        if (!isOpen) {
+        if (!isOpen || !service) {
             // Reset all states when modal closes
             setChatStep(0);
             setIsTyping(false);
             setCrmStep(0);
             setCrmExample(0);
-            setEnrichmentStep(0);
-            setLeadsExample(0);
+            setWebStep(0);
+            setWebExample(0);
             setOpsStep(0);
             setOpsExample(0);
             return;
@@ -176,41 +174,41 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ isOpen, onClose, service })
             }
         }
 
-        // -- LEADS ANIMATION SEQUENCE --
-        if (service.type === 'leads') {
-            setEnrichmentStep(0);
+        // -- WEB ANIMATION SEQUENCE --
+        if (service.type === 'web') {
+            setWebStep(0);
 
-            if (leadsExample === 0) {
-                // Enrichment (Existing)
+            if (webExample === 0) {
+                // Diseño (Wireframes)
                 const sequence = async () => {
                     await new Promise(r => setTimeout(r, 800));
-                    setEnrichmentStep(1); // Incoming message
+                    setWebStep(1); // Skeleton
                     await new Promise(r => setTimeout(r, 1000));
-                    setEnrichmentStep(2); // Analyzing
-                    await new Promise(r => setTimeout(r, 2500));
-                    setEnrichmentStep(3); // Enriched Result
+                    setWebStep(2); // Styling
+                    await new Promise(r => setTimeout(r, 2000));
+                    setWebStep(3); // Finished Design
                 };
                 sequence();
-            } else if (leadsExample === 1) {
-                // Scraping (New)
+            } else if (webExample === 1) {
+                // Desarrollo (Código IA)
                 const sequence = async () => {
                     await new Promise(r => setTimeout(r, 500));
-                    setEnrichmentStep(1); // Load profile
-                    await new Promise(r => setTimeout(r, 1000));
-                    setEnrichmentStep(2); // Extracting
+                    setWebStep(1); // Generating Code
                     await new Promise(r => setTimeout(r, 1500));
-                    setEnrichmentStep(3); // Data Card
+                    setWebStep(2); // Compiling
+                    await new Promise(r => setTimeout(r, 1500));
+                    setWebStep(3); // Live Preview
                 };
                 sequence();
-            } else if (leadsExample === 2) {
-                // Filtering (New)
+            } else if (webExample === 2) {
+                // Despliegue
                 const sequence = async () => {
                     await new Promise(r => setTimeout(r, 500));
-                    setEnrichmentStep(1); // List loaded
+                    setWebStep(1); // Uploading
                     await new Promise(r => setTimeout(r, 1000));
-                    setEnrichmentStep(2); // Scannning/Filtering
+                    setWebStep(2); // Optimizing
                     await new Promise(r => setTimeout(r, 1500));
-                    setEnrichmentStep(3); // Qualified Only
+                    setWebStep(3); // 100/100 Lighthouse
                 };
                 sequence();
             }
@@ -257,8 +255,9 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ isOpen, onClose, service })
             }
         }
 
-    }, [isOpen, service.type, opsExample, crmExample, leadsExample]);
+    }, [isOpen, service?.type, opsExample, crmExample, webExample]);
 
+    if (!isOpen || !service) return null;
 
     const renderVisualExample = () => {
         switch (service.type) {
@@ -504,23 +503,22 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ isOpen, onClose, service })
                     </div>
                 );
 
-            case 'leads':
+            case 'web':
                 return (
                     <div className="bg-slate-900 rounded-xl overflow-hidden border border-slate-700 h-[400px] flex flex-col relative">
-
                         {/* Selector */}
                         <div className="flex space-x-2 mb-4 justify-center bg-slate-800/80 p-1 rounded-lg w-fit mx-auto mt-4 z-50 sticky top-0 backdrop-blur-sm">
                             {[
-                                { id: 0, label: 'Enriquecimiento', icon: 'fa-wand-magic-sparkles' },
-                                { id: 1, label: 'Scraping', icon: 'fa-globe' },
-                                { id: 2, label: 'Filtrado', icon: 'fa-filter' }
+                                { id: 0, label: 'Diseño UI/UX', icon: 'fa-pen-nib' },
+                                { id: 1, label: 'Desarrollo AI', icon: 'fa-code' },
+                                { id: 2, label: 'Despliegue', icon: 'fa-rocket' }
                             ].map(item => (
                                 <button
                                     key={item.id}
-                                    onClick={() => setLeadsExample(item.id)}
+                                    onClick={() => setWebExample(item.id)}
                                     className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wide transition-all flex items-center gap-2
-                                        ${leadsExample === item.id
-                                            ? 'bg-purple-600 text-white shadow-lg'
+                                        ${webExample === item.id
+                                            ? 'bg-emerald-600 text-white shadow-lg'
                                             : 'text-slate-400 hover:bg-slate-700 hover:text-white'
                                         }
                                     `}
@@ -531,241 +529,131 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ isOpen, onClose, service })
                             ))}
                         </div>
 
-                        {/* Background Grid */}
-                        <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#4f46e5 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-
-                        {/* EXAMPLE 0: Enrichment */}
-                        {leadsExample === 0 && (
-                            <div className="relative h-full p-6">
-                                {/* Step 1: Input Source (Incoming Message) */}
-                                <div className={`transition-all duration-700 flex justify-center mb-8 z-10
-                                     ${enrichmentStep === 0 ? 'opacity-0 translate-y-10' : 'opacity-100 translate-y-0'}
-                                     ${enrichmentStep >= 3 ? 'opacity-0 scale-50 absolute top-0' : ''}
-                                `}>
-                                    <div className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl rounded-bl-none shadow-xl max-w-[80%]">
-                                        <div className="text-[10px] text-slate-400 mb-1 flex items-center gap-2">
-                                            <i className="fa-brands fa-whatsapp text-green-400"></i> +57 321 000...
+                        {/* Contenido Visual */}
+                        <div className="flex-1 relative flex flex-col items-center justify-center p-6 bg-slate-900/50">
+                            
+                            {/* Fase 0: Diseño */}
+                            {webExample === 0 && (
+                                <div className="w-full max-w-md flex flex-col animate-fade-in">
+                                    <div className="flex items-center gap-3 mb-4 text-emerald-400 font-bold text-lg drop-shadow-[0_0_10px_rgba(52,211,153,0.5)] justify-center">
+                                        <i className="fa-solid fa-pen-nib animate-bounce"></i> Generando Interfaz UI/UX
+                                    </div>
+                                    
+                                    <div className="bg-slate-900/80 rounded-xl overflow-hidden border border-slate-700 shadow-2xl backdrop-blur-md">
+                                        {/* Browser Header */}
+                                        <div className="flex bg-slate-800/80 px-4 py-3 border-b border-slate-700/50 items-center gap-2">
+                                            <div className="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.5)]"></div>
+                                            <div className="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_5px_rgba(234,179,8,0.5)]"></div>
+                                            <div className="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]"></div>
+                                            <div className="mx-auto bg-slate-900/50 rounded-full h-4 w-32 border border-slate-700/30"></div>
                                         </div>
-                                        <div className="text-white text-lg font-medium">"Hola, info precios?"</div>
+                                        
+                                        {/* Browser Body */}
+                                        <div className="p-4 flex flex-col gap-3 relative overflow-hidden">
+                                            {/* Glowing background blob */}
+                                            <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-emerald-500/20 rounded-full blur-3xl transition-opacity duration-1000 ${webStep > 0 ? 'opacity-100' : 'opacity-0'}`}></div>
+
+                                            {/* Hero section */}
+                                            <div className={`w-full h-12 rounded-lg transition-all duration-1000 relative overflow-hidden ${webStep > 0 ? 'bg-gradient-to-r from-emerald-500/20 to-sky-500/20 border border-emerald-500/30' : 'bg-slate-800 opacity-30'}`}>
+                                                {webStep > 0 && <div className="absolute left-4 top-3 w-1/3 h-2 bg-emerald-400/40 rounded-full"></div>}
+                                                {webStep > 0 && <div className="absolute left-4 top-7 w-1/4 h-2 bg-slate-500/40 rounded-full"></div>}
+                                            </div>
+                                            
+                                            {/* Features section */}
+                                            <div className="flex gap-3">
+                                                <div className={`flex-1 h-20 rounded-lg transition-all duration-1000 delay-300 relative flex flex-col items-center justify-center gap-2 ${webStep > 1 ? 'bg-slate-800/80 border border-slate-600 shadow-[0_0_15px_rgba(52,211,153,0.1)]' : 'bg-slate-800 opacity-30'}`}>
+                                                    {webStep > 1 && <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center"><i className="fa-solid fa-image text-emerald-400/50"></i></div>}
+                                                    {webStep > 1 && <div className="w-3/4 h-1.5 bg-slate-600 rounded-full"></div>}
+                                                </div>
+                                                <div className={`flex-1 h-20 rounded-lg transition-all duration-1000 delay-500 relative flex flex-col items-center justify-center gap-2 ${webStep > 1 ? 'bg-slate-800/80 border border-slate-600 shadow-[0_0_15px_rgba(14,165,233,0.1)]' : 'bg-slate-800 opacity-30'}`}>
+                                                    {webStep > 1 && <div className="w-8 h-8 rounded-full bg-sky-500/20 flex items-center justify-center"><i className="fa-solid fa-bolt text-sky-400/50"></i></div>}
+                                                    {webStep > 1 && <div className="w-3/4 h-1.5 bg-slate-600 rounded-full"></div>}
+                                                </div>
+                                            </div>
+
+                                            {/* CTA section */}
+                                            <div className={`w-full h-10 rounded-lg transition-all duration-1000 delay-700 mt-1 flex items-center justify-center ${webStep > 2 ? 'bg-gradient-to-r from-purple-600 to-emerald-600 border border-emerald-400 shadow-[0_0_20px_rgba(168,85,247,0.4)]' : 'bg-slate-800 opacity-30'}`}>
+                                                {webStep > 2 && <span className="text-white font-bold text-sm tracking-wider drop-shadow-md"><i className="fa-solid fa-check-double mr-2"></i>DISEÑO APROBADO</span>}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                            )}
 
-                                {/* Step 2: AI Processing Overlay */}
-                                {enrichmentStep === 2 && (
-                                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-slate-900/80 backdrop-blur-sm">
-                                        <div className="w-16 h-16 rounded-full border-4 border-slate-700 border-t-emerald-500 animate-spin mb-4"></div>
-                                        <div className="space-y-2 font-mono text-center">
-                                            <div className="text-emerald-400 text-xs animate-pulse">&gt; Identifying Contact...</div>
-                                            <div className="text-sky-400 text-xs animate-pulse delay-100">&gt; Looking up Company...</div>
-                                            <div className="text-purple-400 text-xs animate-pulse delay-200">&gt; Calculating Score...</div>
-                                        </div>
+                            {/* Fase 1: Desarrollo AI */}
+                            {webExample === 1 && (
+                                <div className="w-full max-w-md bg-black rounded-lg border border-slate-700 overflow-hidden font-mono text-xs animate-fade-in shadow-2xl">
+                                    <div className="flex bg-slate-800 px-4 py-2 border-b border-slate-700 gap-2">
+                                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
                                     </div>
-                                )}
-
-                                {/* Step 3: Enriched Profile Result */}
-                                {enrichmentStep === 3 && (
-                                    <div className="z-10 animate-zoom-in">
-                                        <div className="bg-slate-800 border border-emerald-500/30 rounded-xl p-0 overflow-hidden shadow-2xl shadow-emerald-500/10 mb-4">
-                                            {/* Header */}
-                                            <div className="bg-slate-700/50 p-4 flex gap-4 items-center border-b border-white/5">
-                                                <div className="w-16 h-16 rounded-full bg-slate-600 overflow-hidden border-2 border-emerald-500 shadow-lg shadow-emerald-500/20">
-                                                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-500 text-2xl font-bold text-white">
-                                                        JG
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <h3 className="text-xl font-bold text-white">Juan Gonzalez (CEO)</h3>
-                                                    <p className="text-slate-400 text-xs flex items-center gap-2">
-                                                        <i className="fa-solid fa-building"></i> TechSolutions Inc.
-                                                    </p>
-                                                </div>
-                                                <div className="ml-auto text-right">
-                                                    <div className="text-emerald-400 text-2xl font-bold">98/100</div>
-                                                    <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Lead Score</div>
-                                                </div>
+                                    <div className="p-4 text-emerald-400">
+                                        <p className="mb-2 text-slate-500">{"// Inicializando Agente Coder..."}</p>
+                                        <p className={`transition-opacity duration-300 ${webStep > 0 ? 'opacity-100' : 'opacity-0'}`}>
+                                            <span className="text-purple-400">const</span> App = () =&gt; {"{"}
+                                        </p>
+                                        <p className={`ml-4 transition-opacity duration-300 delay-300 ${webStep > 0 ? 'opacity-100' : 'opacity-0'}`}>
+                                            <span className="text-purple-400">return</span> (
+                                        </p>
+                                        <p className={`ml-8 text-blue-400 transition-opacity duration-300 delay-500 ${webStep > 1 ? 'opacity-100' : 'opacity-0'}`}>
+                                            &lt;div className="modern-web-app"&gt;
+                                        </p>
+                                        <p className={`ml-12 text-white transition-opacity duration-300 delay-700 ${webStep > 1 ? 'opacity-100' : 'opacity-0'}`}>
+                                            Desarrollo ultra rápido.
+                                        </p>
+                                        <p className={`ml-8 text-blue-400 transition-opacity duration-300 delay-1000 ${webStep > 1 ? 'opacity-100' : 'opacity-0'}`}>
+                                            &lt;/div&gt;
+                                        </p>
+                                        <p className={`ml-4 transition-opacity duration-300 delay-1000 ${webStep > 1 ? 'opacity-100' : 'opacity-0'}`}>
+                                            );
+                                        </p>
+                                        <p className={`transition-opacity duration-300 delay-1000 ${webStep > 1 ? 'opacity-100' : 'opacity-0'}`}>
+                                            {"}"}
+                                        </p>
+                                        {webStep > 2 && (
+                                            <div className="mt-4 pt-4 border-t border-slate-700 text-center animate-fade-in text-emerald-400 font-bold">
+                                                <i className="fa-solid fa-check-circle mr-2"></i> COMPILADO EXITOSAMENTE
                                             </div>
-
-                                            {/* Details */}
-                                            <div className="p-4 grid grid-cols-2 gap-4">
-                                                <div className="bg-slate-900/50 p-2 rounded border border-white/5">
-                                                    <div className="text-[10px] text-slate-500 uppercase mb-1">Intención</div>
-                                                    <div className="text-sky-400 text-sm font-medium flex items-center gap-1">
-                                                        <i className="fa-solid fa-temperature-full text-red-500"></i> Compra Inmediata
-                                                    </div>
-                                                </div>
-                                                <div className="bg-slate-900/50 p-2 rounded border border-white/5">
-                                                    <div className="text-[10px] text-slate-500 uppercase mb-1">Presupuesto Est.</div>
-                                                    <div className="text-emerald-400 text-sm font-medium">$5k - $10k USD</div>
-                                                </div>
-                                                <div className="col-span-2 bg-emerald-500/10 border border-emerald-500/20 p-2 rounded flex items-center justify-between">
-                                                    <span className="text-emerald-400 text-xs font-medium">Respuesta Sugerida Generada</span>
-                                                    <button className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold px-3 py-1 rounded transition-colors">
-                                                        Enviar Ahora
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
-                        )}
+                                </div>
+                            )}
 
-                        {/* EXAMPLE 1: Scraping */}
-                        {leadsExample === 1 && (
-                            <div className="h-full flex items-center justify-center relative p-6 w-full">
-                                {/* Target Website (Simulated Browser - Dark Mode) */}
-                                <div className={`w-[300px] h-[220px] bg-slate-950 rounded-lg shadow-2xl overflow-hidden relative transition-all duration-700 border border-slate-700
-                                    ${enrichmentStep >= 3 ? 'scale-90 opacity-40 blur-[2px]' : 'scale-100'}
-                                    ${enrichmentStep === 0 ? 'opacity-0 translate-y-10' : 'opacity-100'}
-                                `}>
-                                    {/* Browser Header */}
-                                    <div className="bg-slate-900 h-7 w-full flex items-center px-3 gap-1.5 border-b border-slate-800">
-                                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
-                                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
-                                        <div className="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
-                                        <div className="ml-3 w-40 h-4 bg-slate-800 rounded-md flex items-center px-2 border border-slate-700">
-                                            <div className="w-2 h-2 rounded-full border border-slate-500"></div>
-                                            <div className="ml-2 w-20 h-1.5 bg-slate-600 rounded-full"></div>
-                                        </div>
+                            {/* Fase 2: Despliegue */}
+                            {webExample === 2 && (
+                                <div className="w-full max-w-sm flex flex-col items-center gap-6 animate-fade-in">
+                                    <div className="relative">
+                                        <i className={`fa-solid fa-rocket text-5xl transition-all duration-1000 ${webStep > 0 ? 'text-emerald-400 -translate-y-4 drop-shadow-[0_0_20px_rgba(52,211,153,0.8)]' : 'text-slate-600'}`}></i>
+                                        <div className={`absolute -bottom-4 left-1/2 -translate-x-1/2 w-12 h-12 bg-emerald-500 rounded-full blur-xl transition-opacity duration-1000 ${webStep > 0 ? 'opacity-50' : 'opacity-0'}`}></div>
                                     </div>
 
-                                    {/* Webpage Content Skeleton (LinkedIn Style Dark High Contrast) */}
-                                    <div className="relative bg-slate-900 h-full">
-                                        {/* Banner */}
-                                        <div className="h-16 bg-gradient-to-r from-slate-800 to-slate-700 w-full relative overflow-hidden border-b border-slate-700">
-                                            <div className="absolute inset-0 bg-white/5" style={{ backgroundImage: 'radial-gradient(#ffffff 0.5px, transparent 0.5px)', backgroundSize: '8px 8px', opacity: 0.2 }}></div>
-                                        </div>
-
-                                        <div className="px-4 -mt-8 flex justify-between items-end relative z-10">
-                                            {/* Avatar */}
-                                            <div className="w-16 h-16 rounded-full bg-slate-800 border-4 border-slate-900 relative overflow-hidden shadow-lg">
-                                                <div className="absolute inset-0 flex items-center justify-center bg-slate-700">
-                                                    <i className="fa-solid fa-user text-slate-400 text-2xl"></i>
+                                    {webStep > 1 && (
+                                        <div className="text-center animate-fade-in">
+                                            <div className="text-sm font-bold text-slate-400 mb-2">Performance SEO</div>
+                                            <div className="flex gap-4">
+                                                <div className="w-16 h-16 rounded-full border-4 border-emerald-500 flex items-center justify-center text-emerald-400 font-black text-xl shadow-[0_0_15px_rgba(52,211,153,0.4)]">
+                                                    99
                                                 </div>
-                                            </div>
-                                            {/* Connect Button */}
-                                            <div className="h-6 w-20 bg-blue-600 rounded-full mb-3 shadow-lg shadow-blue-900/40"></div>
-                                        </div>
-
-                                        <div className="p-4 space-y-3">
-                                            {/* Name & Headline */}
-                                            <div>
-                                                <div className="h-4 bg-slate-600 w-1/2 rounded mb-2"></div>
-                                                <div className="h-2.5 bg-slate-700 w-3/4 rounded border border-slate-600/30"></div>
-                                            </div>
-
-                                            <div className="border-t border-slate-700 pt-3 space-y-2">
-                                                <div className="h-2 bg-slate-700 w-full rounded"></div>
-                                                <div className="h-2 bg-slate-700 w-5/6 rounded"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Scanning Laser Effect */}
-                                    {enrichmentStep >= 1 && enrichmentStep < 3 && (
-                                        <div className="absolute inset-0 z-20 pointer-events-none">
-                                            {/* Moving scan beam */}
-                                            <div className="w-full h-[2px] bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,1)] absolute top-0 animate-scan z-30"></div>
-
-                                            {/* Detected Highlights - Borders only to be cleaner */}
-                                            <div className="absolute top-[85px] left-[16px] w-[64px] h-[64px] border-2 border-emerald-400/80 rounded-full animate-pulse transition-all shadow-[0_0_10px_rgba(52,211,153,0.3)]"></div>
-                                            <div className="absolute top-[152px] left-[16px] w-[140px] h-[16px] border border-emerald-400/80 bg-emerald-500/10 rounded animate-pulse delay-75 shadow-[0_0_10px_rgba(52,211,153,0.3)]"></div>
-
-                                            {/* Status Pill */}
-                                            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/80 border border-emerald-500 text-emerald-400 text-[10px] font-mono px-4 py-1.5 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center gap-2 z-40 backdrop-blur-md w-max">
-                                                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping shrink-0"></div>
-                                                <span className="font-bold tracking-wider whitespace-nowrap">EXTRAYENDO DATOS...</span>
+                                                <div className="w-16 h-16 rounded-full border-4 border-emerald-500 flex items-center justify-center text-emerald-400 font-black text-xl shadow-[0_0_15px_rgba(52,211,153,0.4)]">
+                                                    100
+                                                </div>
+                                                <div className="w-16 h-16 rounded-full border-4 border-emerald-500 flex items-center justify-center text-emerald-400 font-black text-xl shadow-[0_0_15px_rgba(52,211,153,0.4)]">
+                                                    100
+                                                </div>
                                             </div>
                                         </div>
                                     )}
+
+                                    {webStep > 2 && (
+                                        <div className="bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 px-6 py-2 rounded-full font-bold animate-pulse-glow mt-2">
+                                            <i className="fa-solid fa-globe mr-2"></i> SITIO EN VIVO
+                                        </div>
+                                    )}
                                 </div>
+                            )}
 
-                                {/* Extracted Data Card (Glassmorphism) */}
-                                {enrichmentStep >= 3 && (
-                                    <div className="absolute z-30 bg-slate-900/90 backdrop-blur-xl border border-slate-600/50 rounded-xl p-0 shadow-2xl animate-fade-in-up w-[240px] overflow-hidden">
-                                        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-3 flex justify-between items-center">
-                                            <div className="flex items-center gap-2">
-                                                <div className="bg-white/20 p-1.5 rounded-lg">
-                                                    <i className="fa-brands fa-linkedin text-white text-sm"></i>
-                                                </div>
-                                                <span className="text-white text-xs font-bold">Perfil Exportado</span>
-                                            </div>
-                                            <div className="w-1.5 h-1.5 bg-green-400 rounded-full shadow-[0_0_10px_rgba(74,222,128,1)]"></div>
-                                        </div>
-
-                                        <div className="p-4 space-y-3">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center border border-slate-600">
-                                                    <span className="text-slate-400 font-bold">CR</span>
-                                                </div>
-                                                <div>
-                                                    <div className="text-sm font-bold text-white">Carlos Rodriguez</div>
-                                                    <div className="text-[10px] text-slate-400">CTO @ TechGlobal</div>
-                                                </div>
-                                            </div>
-
-                                            <div className="bg-slate-800/50 rounded-lg p-2 space-y-1.5 border border-slate-700/50">
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-[10px] text-slate-500">Email Corp.</span>
-                                                    <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">carlos@techglobal.io</span>
-                                                </div>
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-[10px] text-slate-500">Ubicación</span>
-                                                    <span className="text-[10px] text-slate-300">Medellín, CO</span>
-                                                </div>
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-[10px] text-slate-500">Móvil</span>
-                                                    <span className="text-[10px] text-slate-300">+57 300 ...</span>
-                                                </div>
-                                            </div>
-
-                                            <button className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] py-2 rounded-lg border border-slate-700 transition-colors flex items-center justify-center gap-2">
-                                                <i className="fa-solid fa-download"></i> Guardar en CRM
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* EXAMPLE 2: Filtering */}
-                        {leadsExample === 2 && (
-                            <div className="w-full px-8 py-4 space-y-2">
-                                {/* Header */}
-                                <div className="flex justify-between text-[10px] text-slate-500 font-bold uppercase mb-2">
-                                    <span>Lead</span>
-                                    <span>Status</span>
-                                </div>
-
-                                {/* List Items */}
-                                {[
-                                    { name: 'Lead A', quality: 'baja' },
-                                    { name: 'Lead B', quality: 'alta' },
-                                    { name: 'Lead C', quality: 'baja' }
-                                ].map((lead, idx) => (
-                                    <div key={idx} className={`flex justify-between items-center p-2 rounded border transition-all duration-700
-                                         ${enrichmentStep === 0 ? 'opacity-0 translate-x-[-20px]' : 'opacity-100 translate-x-0'}
-                                         ${enrichmentStep >= 2 && lead.quality === 'baja' ? 'opacity-25 grayscale' : 'bg-slate-800 border-slate-700'}
-                                         ${enrichmentStep >= 3 && lead.quality === 'alta' ? 'bg-emerald-500/20 border-emerald-500 shadow-lg scale-105' : ''}
-                                     `} style={{ transitionDelay: `${idx * 100}ms` }}>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-[10px] text-slate-400">{lead.name[5]}</div>
-                                            <span className="text-xs text-white">{lead.name}</span>
-                                        </div>
-                                        <div>
-                                            {enrichmentStep >= 2 ? (
-                                                lead.quality === 'alta' ?
-                                                    <span className="text-[10px] text-emerald-400 font-bold"><i className="fa-solid fa-check"></i> Calificado</span> :
-                                                    <span className="text-[10px] text-red-400"><i className="fa-solid fa-xmark"></i> Descartado</span>
-                                            ) : (
-                                                <span className="text-[10px] text-slate-500">Pendiente...</span>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-
+                        </div>
                     </div>
                 );
 
@@ -1010,10 +898,14 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ isOpen, onClose, service })
                     {renderVisualExample()}
 
                     <div className="mt-6 flex justify-center">
-                        <button className={`group bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold transition-all shadow-lg hover:shadow-blue-600/30 flex items-center gap-2 transform hover:-translate-y-0.5`}>
+                        <a
+                            href="#contacto"
+                            onClick={onClose}
+                            className="group bg-sky-500 hover:bg-sky-400 text-white px-8 py-3 rounded-full font-bold transition-all shadow-lg hover:shadow-sky-500/30 flex items-center gap-2 transform hover:-translate-y-0.5"
+                        >
                             <span>Quiero esto en mi negocio</span>
                             <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

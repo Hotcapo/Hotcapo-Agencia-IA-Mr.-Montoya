@@ -1,20 +1,45 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# M. Skills IA | Agencia de Automatización y Desarrollo con IA
 
-# Run and deploy your AI Studio app
+Plataforma web corporativa e interactiva de **M. Skills IA**, diseñada con una estética futurista (Glassmorphism, gradientes metálicos y sistema orbital 3D) para presentar soluciones de Agentes de IA, Automatización CRM, Creación de Páginas Web impulsadas por IA y Operaciones Inteligentes.
 
-This contains everything you need to run your app locally.
+## 🚀 Stack Tecnológico
 
-View your app in AI Studio: https://ai.studio/apps/drive/1y3-R74_SKEtWQoayteStpw7Odp-zTEDR
+- **Frontend:** React 19 + TypeScript
+- **Estilos:** Tailwind CSS v4 + Animaciones 3D CSS (`preserve-3d`, `@keyframes orbitSpin`)
+- **Bundler:** Vite 6
+- **IA Conversacional:** `@google/generative-ai` (Google Gemini 2.5 / 2.0 Flash) con historial multi-turno y motor de respaldo local.
+- **Iconografía:** Font Awesome 6.4 + Lucide React
 
-## Run Locally
+## 🧩 Arquitectura de Componentes
 
-**Prerequisites:**  Node.js
+- `components/Navbar.tsx`: Navegación fija con soporte responsivo y menú desplegable móvil.
+- `components/Hero.tsx`: Propuesta de valor central y sistema planetario 3D con satélites en órbitas multi-eje y escala de profundidad dinámica.
+- `components/Stats.tsx`: Indicadores clave de impacto y retorno de inversión.
+- `components/Services.tsx` & `components/ServiceModal.tsx`: Catálogo de los 4 pilares de servicio con demostraciones interactivas animadas por fases (incluyendo el módulo de **Creación de Páginas Web**).
+- `components/ProcessFlow.tsx`: Motor de conversión en 3 etapas (*Captura*, *Nutre*, *Cierra*).
+- `components/Framework.tsx`: Metodología **AIM** (*Audit & Unify*, *Go-Live*, *Scale & Control*).
+- `components/Pricing.tsx`: Planes de inversión (*Básico*, *Avanzado*, *Elite Business*).
+- `components/Contact.tsx`: Formulario interactivo de captura de prospectos con validación y estado de confirmación.
+- `components/Chatbot.tsx` & `data/chatbotContext.ts`: Asistente virtual **Agente M. Skills IA** con contexto de marca, servicios y precios actualizados.
 
+## 🛠️ Instalación y Ejecución Local
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1. **Instalar dependencias:**
+   ```bash
+   npm install
+   ```
+2. **Configurar variables de entorno (Opcional para IA en vivo):**
+   Define `VITE_GEMINI_API_KEY` en tu archivo `.env.local`:
+   ```env
+   VITE_GEMINI_API_KEY=tu_clave_de_gemini
+   ```
+   *(Si no se configura, el chatbot activará automáticamente su motor de respuesta inteligente local).*
+3. **Iniciar servidor de desarrollo:**
+   ```bash
+   npm run dev
+   ```
+4. **Compilar para producción:**
+   ```bash
+   npm run build
+   ```
+

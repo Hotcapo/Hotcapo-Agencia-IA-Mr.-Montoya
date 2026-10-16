@@ -15,7 +15,7 @@ const Framework: React.FC = () => {
     },
     {
       step: "03",
-      name: "ESCALE & CONTROL",
+      name: "SCALE & CONTROL",
       desc: "Optimización continua y dashboards en vivo para que no pierdas ni un solo lead.",
     }
   ];
@@ -26,23 +26,23 @@ const Framework: React.FC = () => {
         <div className="lg:w-2/5 mb-10 lg:mb-0">
           <h2 className="text-6xl font-black text-white tracking-tighter leading-none mb-8">
             NUESTRO <br />
-            <span className="text-sky-400">MODELO.</span>
+            <span className="metal-blue">MODELO.</span>
           </h2>
 
-          <div className="relative rounded-[40px] overflow-hidden border border-white/10 glass-card mb-8 group">
+          <a href="#contacto" className="block relative rounded-[40px] overflow-hidden border border-white/10 glass-card mb-8 group cursor-pointer">
             <img
               src="/assets/tech-office.jpg"
-              alt="Modelo de Trabajo"
+              alt="Modelo de Trabajo M. Skills IA"
               className="w-full h-[300px] object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent"></div>
             <div className="absolute bottom-6 left-6 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-sky-500 flex items-center justify-center text-white shadow-lg">
+              <div className="w-10 h-10 rounded-full bg-sky-500 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
                 <i className="fa-solid fa-play"></i>
               </div>
-              <span className="text-sm font-bold text-white uppercase tracking-widest">Ver Workshop</span>
+              <span className="text-sm font-bold text-white uppercase tracking-widest">Solicitar Diagnóstico</span>
             </div>
-          </div>
+          </a>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="glass-card p-4 rounded-2xl border-white/5 flex flex-col items-center justify-center text-center">

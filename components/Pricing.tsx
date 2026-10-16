@@ -19,7 +19,7 @@ const Pricing: React.FC = () => {
       setup: "$700",
       retainer: "$150/m",
       features: [
-        "Multifluido",
+        "Multiflujo",
         "Base de Conocimiento",
         "Soporte 24/7"
       ],
@@ -42,9 +42,9 @@ const Pricing: React.FC = () => {
     <section id="precios" className="py-24 px-6 relative">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-black metallic-text tracking-tight uppercase mb-4">Inversión</h2>
+          <h2 className="text-4xl md:text-6xl font-black metal-silver tracking-tight uppercase mb-4">Inversión</h2>
           <p className="text-slate-400 text-sm max-w-xl mx-auto italic">
-            Modelos de inversión transparentes para escalar tu negocio con IA.
+            Modelos de inversión transparentes para escalar tu negocio con M. Skills IA.
           </p>
         </div>
 
@@ -75,13 +75,16 @@ const Pricing: React.FC = () => {
                   ))}
                 </ul>
 
-                <button className={`w-full py-4 rounded-xl font-bold text-sm transition-all ${plan.popular ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/20' : 'bg-white/5 text-white hover:bg-white/10'}`}>
+                <a
+                  href="#contacto"
+                  className={`block w-full py-4 rounded-xl font-bold text-sm transition-all ${plan.popular ? 'bg-sky-500 hover:bg-sky-400 text-white shadow-lg shadow-sky-500/20' : 'bg-white/5 text-white hover:bg-white/10'}`}
+                >
                   SELECCIONAR PLAN
-                </button>
+                </a>
               </div>
 
-              {!plan.popular && <div className="text-[10px] text-slate-600 font-bold uppercase tracking-widest group-hover:opacity-0 transition-opacity">Expandir Detalles</div>}
-              {plan.popular && <div className="text-[10px] text-sky-400 font-bold uppercase tracking-widest group-hover:opacity-0 transition-opacity">Plan Sugerido</div>}
+              {!plan.popular && <div className="hidden md:block text-[10px] text-slate-600 font-bold uppercase tracking-widest group-hover:opacity-0 transition-opacity">Expandir Detalles</div>}
+              {plan.popular && <div className="hidden md:block text-[10px] text-sky-400 font-bold uppercase tracking-widest group-hover:opacity-0 transition-opacity">Plan Sugerido</div>}
             </div>
           ))}
         </div>

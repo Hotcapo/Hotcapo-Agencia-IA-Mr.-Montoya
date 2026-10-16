@@ -15,7 +15,7 @@ import ProcessFlow from './components/ProcessFlow';
 const App: React.FC = () => {
   return (
     <div className="min-h-screen selection:bg-sky-500/30">
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,_#1e293b_0%,_#020617_100%)]"></div>
+      <div className="fixed inset-0 -z-10 bg-[#000511]"></div>
 
       <StarBackground />
 

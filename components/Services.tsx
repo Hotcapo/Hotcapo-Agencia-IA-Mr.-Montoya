@@ -25,11 +25,11 @@ const Services: React.FC = () => {
       type: "crm"
     },
     {
-      title: "Lead Gen Engine",
-      desc: "Filtrado inteligente y respuesta inmediata para maximizar conversiones.",
-      icon: "fa-bolt",
+      title: "Creación de Páginas Web",
+      desc: "Diseño y desarrollo de plataformas web modernas, veloces y optimizadas para conversión impulsadas por IA.",
+      icon: "fa-laptop-code",
       color: "emerald",
-      type: "leads"
+      type: "web"
     },
     {
       title: "Ops Inteligentes",
@@ -39,6 +39,25 @@ const Services: React.FC = () => {
       type: "operations"
     }
   ];
+
+  const colorStyles: Record<string, { iconBox: string; badgeText: string }> = {
+    sky: {
+      iconBox: "bg-sky-500/10 text-sky-400 group-hover:bg-sky-500 group-hover:text-white",
+      badgeText: "text-sky-400",
+    },
+    indigo: {
+      iconBox: "bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white",
+      badgeText: "text-indigo-400",
+    },
+    emerald: {
+      iconBox: "bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white",
+      badgeText: "text-emerald-400",
+    },
+    purple: {
+      iconBox: "bg-purple-500/10 text-purple-400 group-hover:bg-purple-500 group-hover:text-white",
+      badgeText: "text-purple-400",
+    },
+  };
 
   const handleServiceClick = (service: any) => {
     setSelectedService(service);
@@ -51,11 +70,11 @@ const Services: React.FC = () => {
         <div className="flex flex-col lg:flex-row items-center gap-12 mb-20">
           <div className="lg:w-1/2 text-left">
             <h2 className="text-5xl md:text-7xl font-black tracking-tight uppercase mb-6">
-              <span className="metal-silver">Nuestros</span> <br />
-              <span className="metal-blue">Agentes.</span>
+              <span className="metal-silver">Nuestras</span> <br />
+              <span className="metal-blue">Soluciones.</span>
             </h2>
             <p className="text-slate-400 text-lg max-w-lg">
-              Desplegamos infraestructura de Inteligencia Artificial que no solo responde, sino que <span className="text-white font-bold">entiende y ejecuta</span> tareas complejas por ti.
+              Desplegamos infraestructura de Inteligencia Artificial y plataformas web que no solo responden, sino que <span className="text-white font-bold">entienden, convierten y ejecutan</span> tareas complejas por ti.
             </p>
           </div>
 
@@ -63,7 +82,7 @@ const Services: React.FC = () => {
             <div className="glass-card rounded-[40px] overflow-hidden border border-white/10 shadow-2xl relative group">
               <img
                 src="/assets/hero-bg.jpg"
-                alt="AI Agent Systems"
+                alt="M. Skills IA Systems"
                 className="w-full h-[250px] object-cover opacity-60 group-hover:scale-110 transition-transform duration-1000"
               />
               <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#020617]"></div>
@@ -83,28 +102,31 @@ const Services: React.FC = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {services.map((service, idx) => (
-            <div
-              key={idx}
-              onClick={() => handleServiceClick(service)}
-              className="reveal-on-hover glass-card p-8 rounded-[32px] border-white/5 hover:border-sky-500/30 transition-all cursor-pointer group relative overflow-hidden flex flex-col items-center text-center"
-            >
-              <div className={`w-16 h-16 rounded-2xl bg-${service.color}-500/10 flex items-center justify-center text-${service.color}-400 mb-6 group-hover:bg-sky-500 group-hover:text-white transition-all duration-500`}>
-                <i className={`fa-solid ${service.icon} text-2xl`}></i>
-              </div>
+          {services.map((service, idx) => {
+            const style = colorStyles[service.color] || colorStyles.sky;
+            return (
+              <div
+                key={idx}
+                onClick={() => handleServiceClick(service)}
+                className="reveal-on-hover glass-card p-8 rounded-[32px] border-white/5 hover:border-sky-500/30 transition-all cursor-pointer group relative overflow-hidden flex flex-col items-center text-center"
+              >
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 ${style.iconBox}`}>
+                  <i className={`fa-solid ${service.icon} text-2xl`}></i>
+                </div>
 
-              <h3 className="text-xl font-bold text-white tracking-tight uppercase mb-2">{service.title}</h3>
+                <h3 className="text-xl font-bold text-white tracking-tight uppercase mb-2">{service.title}</h3>
 
-              <div className="hidden-content">
-                <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                  {service.desc}
-                </p>
-                <div className={`text-${service.color}-400 text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2`}>
-                  SABER MÁS <i className="fa-solid fa-play text-[8px]"></i>
+                <div className="hidden-content flex flex-col items-center">
+                  <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                    {service.desc}
+                  </p>
+                  <div className={`${style.badgeText} text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2`}>
+                    VER DEMO INTERACTIVA <i className="fa-solid fa-play text-[8px]"></i>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

@@ -13,12 +13,15 @@ const Stats: React.FC = () => {
     <section className="py-20 px-6 relative">
       <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12">
         {stats.map((stat, idx) => (
-          <div key={idx} className="text-center group interactive-card">
+          <div key={idx} className="text-center group interactive-card p-6 rounded-3xl glass-card border-white/5 hover:border-sky-500/20 transition-all">
             <div className="text-4xl md:text-5xl font-black metal-silver tracking-tighter mb-2">
               {stat.value}
             </div>
-            <div className="text-[10px] font-black text-sky-500 uppercase tracking-[0.2em]">
+            <div className="text-[11px] font-black text-sky-400 uppercase tracking-[0.2em] mb-1">
               {stat.label}
+            </div>
+            <div className="text-xs text-slate-500 font-medium">
+              {stat.sub}
             </div>
           </div>
         ))}

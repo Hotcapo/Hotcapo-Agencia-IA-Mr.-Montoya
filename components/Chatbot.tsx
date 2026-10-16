@@ -11,12 +11,35 @@ interface Message {
     timestamp: Date;
 }
 
+/**
+ * Genera una respuesta local inteligente cuando no hay API Key configurada.
+ */
+const getSmartFallbackResponse = (query: string): string => {
+    const q = query.toLowerCase();
+    if (q.includes('precio') || q.includes('costo') || q.includes('cuanto') || q.includes('cuánto') || q.includes('inversion') || q.includes('inversión') || q.includes('plan')) {
+        return 'Nuestros planes inician desde $150 USD de setup (+ $60/mes) en el Plan Básico, $700 USD en el Plan Avanzado y +$2.8k para soluciones Elite Business. ¿Buscas automatizar un canal puntual o toda tu operación?';
+    }
+    if (q.includes('web') || q.includes('pagina') || q.includes('página') || q.includes('sitio')) {
+        return 'Diseñamos y desarrollamos páginas web modernas, ultra rápidas y optimizadas para conversión con IA. ¿Necesitas renovar tu sitio actual o lanzar uno desde cero?';
+    }
+    if (q.includes('servicio') || q.includes('hacen') || q.includes('ofrecen') || q.includes('agente')) {
+        return 'En M. Skills IA nos especializamos en 4 pilares: Agentes de IA 24/7 (WhatsApp/Instagram), Automatización de CRM, Creación de Páginas Web con IA y Operaciones Inteligentes. ¿Cuál de estos te daría mayor impacto hoy?';
+    }
+    if (q.includes('contacto') || q.includes('agendar') || q.includes('cita') || q.includes('demo') || q.includes('whatsapp')) {
+        return '¡Excelente! Puedes dejarnos tu correo en la sección de Contacto aquí mismo en la página para agendar tu consultoría estratégica hoy mismo.';
+    }
+    return 'En M. Skills IA creamos agentes autónomos y plataformas web que multiplican tus ventas sin aumentar tu carga operativa. ¿Qué proceso de tu negocio te gustaría automatizar primero?';
+};
+
+/**
+ * Widget flotante de asistencia conversacional impulsado por Gemini AI.
+ */
 const Chatbot: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
         {
             id: '1',
-            text: '¡Hola! Soy el asistente virtual de Mr. Montoya. ¿En qué puedo ayudarte hoy?',
+            text: '¡Hola! Soy el asistente virtual de M. Skills IA. ¿En qué puedo ayudarte a escalar tu negocio hoy?',
             sender: 'bot',
             timestamp: new Date()
         }
@@ -43,7 +66,8 @@ const Chatbot: React.FC = () => {
             timestamp: new Date()
         };
 
-        setMessages(prev => [...prev, userMessage]);
+        const updatedMessages = [...messages, userMessage];
+        setMessages(updatedMessages);
         setInputText('');
         setIsLoading(true);
 
@@ -51,44 +75,51 @@ const Chatbot: React.FC = () => {
             const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
             if (!apiKey || apiKey === 'PLACEHOLDER_API_KEY') {
-                throw new Error('API Key no configurada');
+                await new Promise(r => setTimeout(r, 600));
+                const fallbackText = getSmartFallbackResponse(userMessage.text);
+                setMessages(prev => [...prev, {
+                    id: (Date.now() + 1).toString(),
+                    text: fallbackText,
+                    sender: 'bot',
+                    timestamp: new Date()
+                }]);
+                return;
             }
 
             const genAI = new GoogleGenerativeAI(apiKey);
-            // Lista de modelos para probar en orden de prioridad/disponibilidad
-            const modelsToTry = ["gemini-2.0-flash-exp", "gemini-flash-latest", "gemini-2.5-flash"];
+            const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-flash-latest"];
+
+            // Construir historial para multi-turn chat (excluyendo el saludo inicial estático)
+            const history = updatedMessages
+                .slice(1, -1)
+                .map(m => ({
+                    role: m.sender === 'user' ? 'user' as const : 'model' as const,
+                    parts: [{ text: m.text }]
+                }));
 
             let text = '';
-            let lastError = null;
 
             for (const modelName of modelsToTry) {
                 try {
-                    console.log(`Intentando con modelo: ${modelName}`);
                     const model = genAI.getGenerativeModel({
                         model: modelName,
                         systemInstruction: SYSTEM_INSTRUCTION
                     });
-                    const result = await model.generateContent(userMessage.text);
+                    const chat = model.startChat({ history });
+                    const result = await chat.sendMessage(userMessage.text);
                     const response = await result.response;
                     text = response.text();
-
-                    // Si llegamos aquí, tuvimos éxito
-                    lastError = null;
                     break;
                 } catch (e: any) {
                     console.warn(`Falló modelo ${modelName}:`, e.message);
-                    lastError = e;
-                    // Continuar con el siguiente modelo
-                    if (e.message?.includes('429')) continue; // Si es cuota, probar otro
-                    if (e.message?.includes('404')) continue; // Si no existe, probar otro
-                    throw e; // Otros errores (auth, etc) lanzarlos
+                    if (e.message?.includes('429') || e.message?.includes('404')) continue;
+                    throw e;
                 }
             }
 
-            if (lastError || !text) {
-                throw lastError || new Error('No se pudo obtener respuesta de ningún modelo');
+            if (!text) {
+                text = getSmartFallbackResponse(userMessage.text);
             }
-
 
             const botMessage: Message = {
                 id: (Date.now() + 1).toString(),
@@ -100,27 +131,13 @@ const Chatbot: React.FC = () => {
             setMessages(prev => [...prev, botMessage]);
         } catch (error: any) {
             console.error('Error getting response:', error);
-            let errorText = 'Lo siento, hubo un error al procesar tu solicitud.';
-
-            // Debug info
-            const rawError = error instanceof Error ? error.message : String(error);
-            errorText += ` (Detalles: ${rawError})`;
-
-            if (error.message === 'API Key no configurada') {
-                errorText = 'Error de configuración: No se encontró la API Key. Por favor verifica el archivo .env.local y reinicia el servidor.';
-            } else if (error.message?.includes('429')) {
-                errorText = 'El sistema está saturado momentáneamente (Límite de cuota). Intenta de nuevo en unos segundos.';
-            } else if (error.message?.includes('400')) {
-                errorText = 'Error de validación: La solicitud fue rechazada. Verifica que la API Key sea válida.';
-            }
-
-            const errorMessage: Message = {
+            const fallbackMessage: Message = {
                 id: (Date.now() + 1).toString(),
-                text: errorText,
+                text: getSmartFallbackResponse(userMessage.text),
                 sender: 'bot',
                 timestamp: new Date()
             };
-            setMessages(prev => [...prev, errorMessage]);
+            setMessages(prev => [...prev, fallbackMessage]);
         } finally {
             setIsLoading(false);
         }
@@ -149,7 +166,7 @@ const Chatbot: React.FC = () => {
                             <Bot className="w-6 h-6 text-white" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-white text-sm">Agente Mr. Montoya</h3>
+                            <h3 className="font-bold text-white text-sm">Agente M. Skills IA</h3>
                             <p className="text-xs text-sky-400 flex items-center gap-1">
                                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                                 En línea
